@@ -1,0 +1,44 @@
+
+/* Database link: https://www.dropbox.com/sh/tg18j6pkfhlxem3/AACPDvxCUJAAo7WPD0LJW_Iwa?dl=0 */
+
+SELECT * FROM BIT_DB.customers LIMIT 20
+
+SELECT * FROM BIT_DB.JanSales LIMIT 20
+
+SELECT * FROM BIT_DB.FebSales LIMIT 20
+
+/* How many orders were placed in January? */
+
+    SELECT count(orderid) FROM  BIT_DB.JanSales
+
+/* How many of those orders were for an iPhone? */
+
+    SELECT count(*) FROM BIT_DB.JanSales WHERE product = 'iPhone'
+
+/* Select the customer account numbers for all the orders that were placed in February.  */
+
+    SELECT BIT_DB.customers.acctnum FROM BIT_DB.customers
+    JOIN BIT_DB.FebSales
+    ON BIT_DB.customers.order_id = BIT_DB.FebSales.orderID
+    
+/* Which product was the cheapest one sold in January, and what was the price? */
+
+    SELECT distinct BIT_DB.JanSales.Product, min(BIT_DB.JanSales.price) FROM BIT_DB.JanSales
+    
+/* What is the total revenue for each product sold in January? */
+    SELECT sum(BIT_DB.JanSales.Quantity * BIT_DB.JanSales.price) as revenue, product FROM BIT_DB.JanSales
+    GROUP BY product
+    
+/* Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue? */
+
+    SELECT BIT_DB.FebSales.Product, BIT_DB.FebSales.Quantity, sum(Quantity*price) as rev
+    FROM BIT_DB.FebSales
+    WHERE location = '548 Lincoln St, Seattle, WA 98101'
+    GROUP BY Product
+    
+/* How many customers ordered more than 2 products at a time, and what was the average amount spent for those customers?  */
+
+    SELECT count(BIT_DB.customers.acctnum), avg(quantity)*price FROM BIT_DB.FebSales 
+    JOIN  BIT_DB.customers
+    ON BIT_DB.FebSales.orderID = BIT_DB.customers.order_ID
+    WHERE BIT_DB.FebSales.Quantity > 2
