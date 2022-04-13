@@ -42,3 +42,9 @@ SELECT * FROM BIT_DB.FebSales LIMIT 20
     JOIN  BIT_DB.customers
     ON BIT_DB.FebSales.orderID = BIT_DB.customers.order_ID
     WHERE BIT_DB.FebSales.Quantity > 2
+    
+/* List all the products sold in Los Angeles in February, and include how many of each were sold. */
+
+    SELECT Product, sum(quantity) FROM BIT_DB.FebSales
+    WHERE location like "%Los Angeles%" 
+    GROUP BY Product      
